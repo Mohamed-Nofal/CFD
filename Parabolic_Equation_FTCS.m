@@ -21,7 +21,7 @@ d_y=h/(j_max-1);
 d=v*d_t/d_y^2  % diffusion Number
 u=nan(j_max,n_max) ;
 if d>0.5
-%     error("Solution Fails")
+  warning("Solution Fails .. d > 0.5")
 end
 %% Initial Conditions
 u(:,1)=0*ones(j_max,1);
