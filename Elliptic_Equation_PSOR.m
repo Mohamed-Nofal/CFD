@@ -1,5 +1,5 @@
-% Numerical solution of Laplace Equation Using PSOR Method
-%---------------------------------------------------------
+%% Solve Elliptic Equation by PSOR 
+
 clc;clear all;close all
 
 %% Given or Arbitrary data
@@ -19,7 +19,7 @@ for ii=1:8
     % initial values   
     for i=1:imax
         for j=1:jmax
-            u(imax,jmax)=0 ;
+            u(i,j)=0 ;
         end
     end
     %Boundary values
