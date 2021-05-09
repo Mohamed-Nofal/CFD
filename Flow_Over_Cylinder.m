@@ -1,4 +1,4 @@
-%% Flow Over Clinder 
+%% Flow Over Clinder Using PSOR scheme
 
 clc;clear all;close all;    
 imax=51;jmax=51;
@@ -15,7 +15,8 @@ beta     = dzeta/deta;
 % Inner circle generation 
 for i = 1:imax
     j = 1;    
-    zeta  = (i-1)/(imax-1); eta=(j-1)*etta_inf/(jmax-1);
+    zeta  = (i-1)/(imax-1); 
+    eta   = (j-1)*etta_inf/(jmax-1);
     x_c(i)= a*exp(pi*eta)*cos(pi*zeta);
     y_c(i)= a*exp(pi*eta)*sin(pi*zeta);
 end
@@ -32,14 +33,14 @@ end
 %Grid Generation :
 for i=1:imax 
     for j = 1:jmax
-      zeta = (i-1)/(imax-1);
-      eta  = (j-1)*etta_inf/(jmax-1);
+      zeta   = (i-1)/(imax-1);
+      eta    = (j-1)*etta_inf/(jmax-1);
       x(i,j) = a*exp(pi*eta)*cos(pi*zeta);
       y(i,j) = a*exp(pi*eta)*sin(pi*zeta);
     end
 end
 for i=1:imax
-    for j= 1:jmax
+    for j = 1:jmax
        xm(j,i) = x(i,j);
        ym(j,i) = y(i,j);
     end
@@ -76,7 +77,8 @@ for i=2:imax-1
 end
 Epsi_initial=epsii;  adder=0;
 
-% solving using P_SOR scheme
+% solving using PSOR scheme
+
 n=1;   rms=1;
 while rms>1e-9
    for i=1:imax;
@@ -164,8 +166,8 @@ end
  plot(x,y,'k')
  hold on
  plot(xm,ym,'k'); hold on
- plot(x_o,y_o,'k');hold on
- plot(x_c,y_c,'k') ; xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ;
+ plot(x_o,y_o,'k','linewidth',2);hold on
+ plot(x_c,y_c,'k','linewidth',2) ; xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ;
  title('Grid over a circular cylinder','fontsize',14)
  axis tight
 % Initial stream lines
@@ -176,10 +178,10 @@ end
 % plot(x_o,y_o) ; xlabel('x','fontsize',18);ylabel ('y','fontsize',18) ; title(' INITIAL STREAM LINES DISTRIBUTIONS','fontsize',18)
 %  stream lines
 figure(4)
-contour(x,y,Epsi,40)
+contour(x,y,Epsi,40,'b')
 hold on
-plot(x_c,y_c);hold on
-plot(x_o,y_o) ; xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ; 
+area(x_c,y_c,'FaceColor','r');hold on
+plot(x_o,y_o,'k','linewidth',2) ; xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ; 
 title(' Stream lines contour','fontsize',14)
 
 % Non dimension velocity distribution and velocity contour
