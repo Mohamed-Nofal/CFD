@@ -1,11 +1,11 @@
-% Numerical solution of Laplace Equation Using PSOR Method
-%---------------------------------------------------------
+%% Solve Elliptic Equation by LSOR 
+
 clc;clear all;close all
 
 %% Given or Arbitrary data
 
 nmax=2000;   imax=51;     jmax=51;  Lx=1;        Ly=1;
-a_omega=[0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0];
+a_omega=[0.25 0.5 0.75 1.0 1.25 1.3];
 
 %% Calculated data
 
@@ -13,13 +13,13 @@ dx          = Lx/(imax-1);
 dy          = Ly/(jmax-1);
 dx_Over_dy  = dx/dy;
 
-for ii=1:8
+for ii=1:6
     omega=a_omega(ii);
     
     % initial values
     for i=1:imax
         for j=1:jmax
-            u(imax,jmax)=0 ;
+            u(i,j)=0 ;
         end
     end
     %Boundary values
@@ -89,34 +89,29 @@ for ii=1:8
     elseif omega==1.25
         RMS_ER_125=RMS_ER;
         Max_ER_125=Max_ER;
-    elseif omega==1.5
-        RMS_ER_150=RMS_ER;
-        Max_ER_150=Max_ER;
-    elseif omega==1.75
-        RMS_ER_175=RMS_ER;
-        Max_ER_175=Max_ER;
-    elseif omega==2.0
-        RMS_ER_200=RMS_ER;
-        Max_ER_200=Max_ER;
+    elseif omega==1.3
+        RMS_ER_130=RMS_ER;
+        Max_ER_130=Max_ER;
+    
     end
 end
 % Results output
 
 figure
-plot(an,RMS_ER_025,an,RMS_ER_050,an,RMS_ER_075,an,RMS_ER_100,an,RMS_ER_125,an,RMS_ER_150,an,RMS_ER_175,an,RMS_ER_200)
+plot(an,RMS_ER_025,an,RMS_ER_050,an,RMS_ER_075,an,RMS_ER_100,an,RMS_ER_125,an,RMS_ER_130)
 xlabel('Iteration No', 'fontsize',12)
 ylabel('Log_1_0 RMS(Error)', 'fontsize',12)
 title('Convergence history using PSOR & 51X51 grid points','fontsize',12)
-legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.50','\omega=1.75','\omega=2.00','Location','best')
+legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.30','Location','best')
 grid on
 set(findall(gcf,'type','line'),'linewidth',2.6)
 
 figure
-plot(an,Max_ER_025,an,Max_ER_050,an,Max_ER_075,an,Max_ER_100,an,Max_ER_125,an,Max_ER_150,an,Max_ER_175,an,Max_ER_200)
+plot(an,Max_ER_025,an,Max_ER_050,an,Max_ER_075,an,Max_ER_100,an,Max_ER_125,an,Max_ER_130)
 xlabel('Iteration No', 'fontsize',12)
 ylabel('Log_1_0 Max(Error)', 'fontsize',12)
 title('Convergence history using PSOR & 51X51 grid points','fontsize',12)
-legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.50','\omega=1.75','\omega=2.00','Location','best')
+legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.30','Location','best')
 grid on
 set(findall(gcf,'type','line'),'linewidth',2.6)
 
