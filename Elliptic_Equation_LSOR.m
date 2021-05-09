@@ -12,7 +12,7 @@ a_omega=[0.25 0.5 0.75 1.0 1.25 1.5 1.75 2.0];
 dx          = Lx/(imax-1);
 dy          = Ly/(jmax-1);
 dx_Over_dy  = dx/dy;
-%%
+
 for ii=1:8
     omega=a_omega(ii);
     
@@ -51,6 +51,8 @@ for ii=1:8
             end
             up(:,j)=Tri_Sol(a,b,c,d,imax);
         end
+        
+        
         % Error calculations
         rmser=0   ;  maxer=0;   imaxer=1;    jmaxer=1;
         for j=2:jmax-1
@@ -98,17 +100,14 @@ for ii=1:8
         Max_ER_200=Max_ER;
     end
 end
-
-
-
-%% Results output
+% Results output
 
 figure
 plot(an,RMS_ER_025,an,RMS_ER_050,an,RMS_ER_075,an,RMS_ER_100,an,RMS_ER_125,an,RMS_ER_150,an,RMS_ER_175,an,RMS_ER_200)
 xlabel('Iteration No', 'fontsize',12)
 ylabel('Log_1_0 RMS(Error)', 'fontsize',12)
 title('Convergence history using PSOR & 51X51 grid points','fontsize',12)
-legend('omega=0.25','omega=0.50','omega=0.75','omega=1.00','omega=1.25','omega=1.50','omega=1.75','omega=2.00','Location','best')
+legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.50','\omega=1.75','\omega=2.00','Location','best')
 grid on
 set(findall(gcf,'type','line'),'linewidth',2.6)
 
@@ -117,7 +116,7 @@ plot(an,Max_ER_025,an,Max_ER_050,an,Max_ER_075,an,Max_ER_100,an,Max_ER_125,an,Ma
 xlabel('Iteration No', 'fontsize',12)
 ylabel('Log_1_0 Max(Error)', 'fontsize',12)
 title('Convergence history using PSOR & 51X51 grid points','fontsize',12)
-legend('omega=0.25','omega=0.50','omega=0.75','omega=1.00','omega=1.25','omega=1.50','omega=1.75','omega=2.00','Location','best')
+legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.50','\omega=1.75','\omega=2.00','Location','best')
 grid on
 set(findall(gcf,'type','line'),'linewidth',2.6)
 
@@ -135,4 +134,5 @@ for k=2:M
     i = M - k + 1;
     e(i) = (c(i) - a(i) * e(i + 1)) / d(i);
 end
+
 end
