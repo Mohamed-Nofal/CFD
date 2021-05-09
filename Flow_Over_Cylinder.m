@@ -1,27 +1,48 @@
-clear all;   close all;    clc;
-imax=51;  jmax=51;  R=5;  a=1; omega = 1.5;  V_inf=100 ;
+%% Flow Over Clinder 
 
-etta_inf=(1/pi)*(log(R/a));  dzeta=1/(imax-1);  deta=etta_inf/(jmax-1);
-beta=dzeta/deta;
+clc;clear all;close all;    
+imax=51;jmax=51;
+a     = 0.1;
+R     = 7*a;
+omega = 1;  
+V_inf = 100 ;
+
+etta_inf = (1/pi)*(log(R/a));
+dzeta    = 1/(imax-1);
+deta     = etta_inf/(jmax-1);
+beta     = dzeta/deta;
 
 % Inner circle generation 
-for i=1:imax ;   j=1;     zeta=(i-1)/(imax-1); eta=(j-1)*etta_inf/(jmax-1);
-    x_c(i)=a*exp(pi*eta)*cos(pi*zeta);  y_c(i)=a*exp(pi*eta)*sin(pi*zeta);
+for i = 1:imax
+    j = 1;    
+    zeta  = (i-1)/(imax-1); eta=(j-1)*etta_inf/(jmax-1);
+    x_c(i)= a*exp(pi*eta)*cos(pi*zeta);
+    y_c(i)= a*exp(pi*eta)*sin(pi*zeta);
 end
+
 % Outer circle generation 
-for i=1:imax ; j=jmax;    zeta=(i-1)/(imax-1); eta=(j-1)*etta_inf/(jmax-1);
-    x_o(i)=a*exp(pi*eta)*cos(pi*zeta);  y_o(i)=a*exp(pi*eta)*sin(pi*zeta);
+for i = 1:imax 
+    j = jmax;
+    zeta = (i-1)/(imax-1);
+    eta  = (j-1)*etta_inf/(jmax-1);
+    x_o(i)= a*exp(pi*eta)*cos(pi*zeta);
+    y_o(i)= a*exp(pi*eta)*sin(pi*zeta);
 end
 
 %Grid Generation :
-for i=1:imax ; 
-    for j=1:jmax
-      zeta=(i-1)/(imax-1);       eta=(j-1)*etta_inf/(jmax-1);
-      x(i,j)=a*exp(pi*eta)*cos(pi*zeta); y(i,j)=a*exp(pi*eta)*sin(pi*zeta);
-   end
+for i=1:imax 
+    for j = 1:jmax
+      zeta = (i-1)/(imax-1);
+      eta  = (j-1)*etta_inf/(jmax-1);
+      x(i,j) = a*exp(pi*eta)*cos(pi*zeta);
+      y(i,j) = a*exp(pi*eta)*sin(pi*zeta);
+    end
 end
 for i=1:imax
-for j= 1:jmax  ;   xm(j,i)=x(i,j);   ym(j,i)=y(i,j); end
+    for j= 1:jmax
+       xm(j,i) = x(i,j);
+       ym(j,i) = y(i,j);
+    end
 end
 
 % initial and boundary conditions
@@ -57,20 +78,20 @@ Epsi_initial=epsii;  adder=0;
 
 % solving using P_SOR scheme
 n=1;   rms=1;
-while rms>0.000000001
+while rms>1e-9
    for i=1:imax;
       for j=1:jmax ;
         eps_new=epsii(i,j);
         epsi_ex=epsii(i,j);
           if i>1 && i<imax
                 if j>1 && j<jmax
-         epsi_i_j=epsii(i,j);
-         epsi_ip1_j=epsii(i+1,j);
-         epsi_im1_j_np1=epsii_new(i-1,j);
-         epsi_i_jp1=epsii(i,j+1);
-         epsi_i_jm1_np1=epsii_new(i,j-1);
-         epsi_dash=(1/(2*(1+(beta^2))))*(epsi_ip1_j+epsi_im1_j_np1+((beta^2)*(epsi_i_jp1+ epsi_i_jm1_np1)));
-         eps_new=epsi_i_j+(omega*((epsi_dash)-epsi_i_j));
+                     epsi_i_j=epsii(i,j);
+                     epsi_ip1_j=epsii(i+1,j);
+                     epsi_im1_j_np1=epsii_new(i-1,j);
+                     epsi_i_jp1=epsii(i,j+1);
+                     epsi_i_jm1_np1=epsii_new(i,j-1);
+                     epsi_dash=(1/(2*(1+(beta^2))))*(epsi_ip1_j+epsi_im1_j_np1+((beta^2)*(epsi_i_jp1+ epsi_i_jm1_np1)));
+                     eps_new=epsi_i_j+(omega*((epsi_dash)-epsi_i_j));
                  end
           end
        epsii_new(i,j)=eps_new;    epsiii_new    =eps_new;
@@ -87,9 +108,12 @@ end
 % Convergence History
 figure(1)
 plot (a_n,a_log_rms)
-xlabel('iteration number','fontsize',18);ylabel ('log_1_0(RMS.Error)','fontsize',18) ;
-title('Convergence History Using PSOR scheme','fontsize',18)
-     
+xlabel('iteration number','fontsize',14);ylabel ('log_1_0(RMS.Error)','fontsize',14) ;
+title('Convergence History Using PSOR scheme','fontsize',14)
+grid
+set(findall(gcf,'type','line'),'linewidth',2.6)
+axis tight 
+
 % Calculation  of u ,v ,V ,Cp
 Epsi=epsii;
 for i=1:imax
@@ -108,7 +132,6 @@ for i=1:imax
     end
 end
  
-%-------------------------CALCULATING -------------------------------------
 %1) v   DISTRIBUTION    &     %2) cp  dISTRIBUTION
 for j=1:jmax
     for i=1:imax
@@ -133,54 +156,64 @@ for j=1:jmax
         Cp(i,j)=1-(V(i,j)/V_inf)^2;          % CP DISTRIBTUION
     end
 end
+
 %*************  RESULTS ************************
 
 %  coordinates
  figure(2)
- plot(x,y)
+ plot(x,y,'k')
  hold on
- plot(xm,ym); hold on
- plot(x_o,y_o);hold on
- plot(x_c,y_c) ; xlabel('x','fontsize',18);ylabel ('y','fontsize',18) ;
- title('Grid over a circular cylinder','fontsize',18)
-
-%stream lines
+ plot(xm,ym,'k'); hold on
+ plot(x_o,y_o,'k');hold on
+ plot(x_c,y_c,'k') ; xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ;
+ title('Grid over a circular cylinder','fontsize',14)
+ axis tight
+% Initial stream lines
 % figure(3)
 % contour(x,y,Epsi_initial,25)
 % hold on
 % plot(x_c,y_c); hold on
 % plot(x_o,y_o) ; xlabel('x','fontsize',18);ylabel ('y','fontsize',18) ; title(' INITIAL STREAM LINES DISTRIBUTIONS','fontsize',18)
+%  stream lines
 figure(4)
 contour(x,y,Epsi,40)
 hold on
 plot(x_c,y_c);hold on
-plot(x_o,y_o) ; xlabel('x','fontsize',18);ylabel ('y','fontsize',18) ; 
-title(' Stream lines contour','fontsize',18)
+plot(x_o,y_o) ; xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ; 
+title(' Stream lines contour','fontsize',14)
 
 % Non dimension velocity distribution and velocity contour
 for i=1:imax  ;  Vel(i)=V(i,1)/V_inf;  end
+
 figure(5)
-plot(x_c,Vel); xlabel('x','fontsize',18);ylabel ('V/V_o_o','fontsize',18) ; 
-title('Non dimensional velocity distribution over the circular cylinder','fontsize',14)
+plot(x_c,Vel); xlabel('x','fontsize',14);ylabel ('V/V_o_o','fontsize',14) ; 
+title('Non dimensional velocity distribution over the circular cylinder','fontsize',12)
+grid
+set(findall(gcf,'type','line'),'linewidth',2.6)
+
 figure(6)
-contour(x,y ,V,40)
+contourf(x,y ,V,40)
 hold on
 plot(x_o,y_o);hold on
-plot(x_c,y_c) ; xlabel('x','fontsize',18);ylabel ('y','fontsize',18) ; 
-title('Velocity contour','fontsize',18)
-
+plot(x_c,y_c) ; xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ; 
+title('Velocity contour','fontsize',14)
+colormap(jet)
+colorbar
 
 % Cp distribution and pressure contour
 for i=1:imax ;  cpp(i)=Cp(i,1);  end  
 figure(7)
-plot(x_c,cpp); xlabel('x','fontsize',18);ylabel ('C_p','fontsize',18) ; 
+plot(x_c,cpp); xlabel('x','fontsize',14);ylabel ('C_p','fontsize',14) ; 
 title('Pressure distribution over the circular cylinder')
+grid
+set(findall(gcf,'type','line'),'linewidth',2.6)
+
 figure(8)
-contour(x,y ,Cp,20)
+contourf(x,y ,Cp,20)
 hold on
 plot(x_c,y_c);hold on
 plot(x_o,y_o);
-xlabel('x','fontsize',18);ylabel ('y','fontsize',18) ;
-title('Pressure coefficient contour','fontsize',18)
-
-%###################################################
+xlabel('x','fontsize',14);ylabel ('y','fontsize',14) ;
+title('Pressure coefficient contour','fontsize',14)
+colormap(jet)
+colorbar
