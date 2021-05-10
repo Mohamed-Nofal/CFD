@@ -7,7 +7,7 @@ R     = 7*a;
 omega = 1;  
 V_inf = 100 ;
 
-etta_inf = (1/pi)*(log(R/a));
+etta_inf = (log(R/a))/pi;
 dzeta    = 1/(imax-1);
 deta     = etta_inf/(jmax-1);
 beta     = dzeta/deta;
