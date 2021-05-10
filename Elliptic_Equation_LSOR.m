@@ -101,7 +101,7 @@ figure
 plot(an,RMS_ER_025,an,RMS_ER_050,an,RMS_ER_075,an,RMS_ER_100,an,RMS_ER_125,an,RMS_ER_130)
 xlabel('Iteration No', 'fontsize',12)
 ylabel('Log_1_0 RMS(Error)', 'fontsize',12)
-title('Convergence history using PSOR & 51X51 grid points','fontsize',12)
+title('Convergence history using LSOR & 51X51 grid points','fontsize',12)
 legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.30','Location','best')
 grid on
 set(findall(gcf,'type','line'),'linewidth',2.6)
@@ -110,7 +110,7 @@ figure
 plot(an,Max_ER_025,an,Max_ER_050,an,Max_ER_075,an,Max_ER_100,an,Max_ER_125,an,Max_ER_130)
 xlabel('Iteration No', 'fontsize',12)
 ylabel('Log_1_0 Max(Error)', 'fontsize',12)
-title('Convergence history using PSOR & 51X51 grid points','fontsize',12)
+title('Convergence history using LSOR & 51X51 grid points','fontsize',12)
 legend('\omega=0.25','\omega=0.50','\omega=0.75','\omega=1.00','\omega=1.25','\omega=1.30','Location','best')
 grid on
 set(findall(gcf,'type','line'),'linewidth',2.6)
