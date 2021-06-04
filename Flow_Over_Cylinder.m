@@ -1,22 +1,22 @@
 %% Flow Over Clinder Using PSOR scheme
 
 clc;clear all;close all;    
-imax=51;jmax=51;
-a     = 0.1;
-R     = 7*a;
+imax=5;jmax=5;
+a     = 1;
+R     = 4*a;
 omega = 1;  
 V_inf = 100 ;
-
-etta_inf = (log(R/a))/pi;
+% etta_1   = theta/pi
+etta_2   = log(R/a)/pi;
 dzeta    = 1/(imax-1);
-deta     = etta_inf/(jmax-1);
+deta     = etta_2/(jmax-1);
 beta     = dzeta/deta;
 
 % Inner circle generation 
 for i = 1:imax
     j = 1;    
     zeta  = (i-1)/(imax-1); 
-    eta   = (j-1)*etta_inf/(jmax-1);
+    eta   = (j-1)*etta_2/(jmax-1);
     x_c(i)= a*exp(pi*eta)*cos(pi*zeta);
     y_c(i)= a*exp(pi*eta)*sin(pi*zeta);
 end
@@ -25,7 +25,7 @@ end
 for i = 1:imax 
     j = jmax;
     zeta = (i-1)/(imax-1);
-    eta  = (j-1)*etta_inf/(jmax-1);
+    eta  = (j-1)*etta_2/(jmax-1);
     x_o(i)= a*exp(pi*eta)*cos(pi*zeta);
     y_o(i)= a*exp(pi*eta)*sin(pi*zeta);
 end
@@ -34,11 +34,12 @@ end
 for i=1:imax 
     for j = 1:jmax
       zeta   = (i-1)/(imax-1);
-      eta    = (j-1)*etta_inf/(jmax-1);
+      eta    = (j-1)*etta_2/(jmax-1);
       x(i,j) = a*exp(pi*eta)*cos(pi*zeta);
       y(i,j) = a*exp(pi*eta)*sin(pi*zeta);
     end
 end
+
 for i=1:imax
     for j = 1:jmax
        xm(j,i) = x(i,j);
@@ -49,6 +50,7 @@ end
 % initial and boundary conditions
 
 epsii=zeros(imax,jmax);
+
 for i=1:imax
     for  j=1:jmax
         epsi=0;
@@ -60,7 +62,7 @@ for i=1:imax
         end
         if j==jmax
               zeta=(i-1)/(imax-1);
-              etta=(etta_inf*(j-1))/(jmax-1);
+              etta=(etta_2*(j-1))/(jmax-1);
               r=a*exp(pi*etta);
               theta=pi*zeta;
               epsi=V_inf*r*sin(theta)*(1-(a^2/r^2));
@@ -121,7 +123,7 @@ Epsi=epsii;
 for i=1:imax
     for j=1:jmax
        zeta=(i-1)/(imax-1);
-       eta=(j-1)*etta_inf/(jmax-1);
+       eta=(j-1)*etta_2/(jmax-1);
         x_zeta=-pi*a*exp(pi*eta)*(sin(pi*zeta));
         y_zeta=pi*a*exp(pi*eta)*(cos(pi*zeta));
         x_eta=pi*a*exp(pi*eta)*(cos(pi*zeta));
