@@ -2,13 +2,13 @@ clc;clear all;close all;
 tic
 global x y imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
 
-%% Data
+%% Input Data
 Vinf  = 100; 
 alfad = 10;
 cord  = 1; 
 nitd = 0;il = 31; it = 71; imax = 131; jair = 26; jmax = 51;
 omega = 1; per = .000001; nmax = 20;
-
+%% Calculated Data
 alfa  = alfad * pi / 180;
 cosa  = cos(alfa); sina = sin(alfa);
 uxinf = Vinf * cosa; uyinf = Vinf * sina;
@@ -21,8 +21,8 @@ t2 = t1 * r * r;
 %% Call Geometric Function
 Geometric
 %% Method of solution PSOR or LSOR
-% Method = 0 ; % "if you want the SOR by Point method"
-Method = 1 ; % "if you want the SOR by Line method"
+% Method = 0 ; %if you want to solve by PSOR
+Method = 1 ; %if you want to solve by LSOR
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
 i = 1;   
