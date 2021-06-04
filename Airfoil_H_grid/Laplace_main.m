@@ -1,7 +1,6 @@
 clc;clear all;close all;   
 tic
 global x y imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
-
 %% Input Data
 Vinf  = 100; 
 alfad = 10;
@@ -88,7 +87,6 @@ title('Convergence history using LSOR for the flow past NACA-0012 airfoil with a
 %% Call Result Function
 results
 toc
-
 %% Helping Functions
 function [c11,c12,c22]=coef(ip,jp)
 global x y d1 d2
