@@ -6,7 +6,7 @@ global x y imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
 Vinf  = 100; 
 alfad = 10;
 cord  = 1; 
-nitd = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
+nitd = 0;il = 31; it = 71; imax = 131; jair = 26; jmax = 51;
 omega = 1; per = .000001; nmax = 20;
 
 alfa  = alfad * pi / 180;
@@ -21,8 +21,8 @@ t2 = t1 * r * r;
 %% Call Geometric Function
 Geometric
 %% Method of solution PSOR or LSOR
-Method = 0 ; % "if you want the SOR by Point method"
-%Method = 1 ; % "if you want the SOR by Line method"
+% Method = 0 ; % "if you want the SOR by Point method"
+Method = 1 ; % "if you want the SOR by Line method"
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
 i = 1;   
@@ -80,11 +80,11 @@ for n=1:nmax
     %'            if ((mder > per) AND (n <= nmax)) THEN GO: iter
 end
 figure
-plot(a_n,a_lmder)
-grid on
-xlabel('Iteration number', 'fontsize',18)
-ylabel('Log_1_0 (Error)', 'fontsize',18)
-title(['Convergence history using Line-SOR for the flow past NACA-0012 airfoil with angle of attack =10^o'],'fontsize',8)
+plot(a_n,a_lmder,'linewidth',2)
+grid on;axis tight
+xlabel('Iteration number', 'fontsize',14)
+ylabel('Log_1_0 (Error)', 'fontsize',14)
+title('Convergence history using LSOR for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
 %% Call Result Function
 results
 toc
@@ -175,6 +175,7 @@ global x y imax jmax jair il it cord yal yau
 %  it = i of the trailing edge
 %  cord = chord length
 figure
+axis equal;axis tight ; 
 iil = 2 * il - 1;
 iit = 2 * it - 1;
 iimax = 2 * imax - 1;
@@ -213,40 +214,40 @@ for ii = 1 : iimax; y(ii, jjmax) = cord; end
 for ii = 1 : iimax
     for jj = jjair + 1 : jjmax - 1
         y(ii, jj) = y(ii, jjair) + (jj - jjair) * (y(ii, jjmax) - y(ii, jjair)) / (jjmax - jjair);
-    end ;
+    end 
 end
 % Plot the H-Grid
 for j = 1 : jair - 1;    jj = 2 * j - 1;
-    x1 = x(:,jj); y1=y(:,jj);plot (x1,y1); hold on;
+    x1 = x(:,jj); y1=y(:,jj);plot (x1,y1,'k'); hold on;
 end
-jj = jjair ;x1 = x(:,jj); y1=yal(:);plot (x1,y1); hold on
-x1 = x(:,jj); y1=yau(:);plot (x1,y1); hold on
+jj = jjair ;x1 = x(:,jj); y1=yal(:);plot (x1,y1,'k'); hold on
+x1 = x(:,jj); y1=yau(:);plot (x1,y1,'k'); hold on
 for j = jair + 1 : jmax;  jj = 2 * j - 1;
-    x1 = x(:, jj); y1 = y(:, jj);plot (x1,y1); hold on;
+    x1 = x(:, jj); y1 = y(:, jj);plot (x1,y1,'k'); hold on;
 end
 y(:, jjair) = yal(:);
 for i=1:il; ii=2*i-1; x1 = x(ii,:);
-    y1 = y(ii,:);plot (x1,y1); hold on; end
+    y1 = y(ii,:);plot (x1,y1,'k'); hold on; end
 y(:, jjair) = yal(:);
 for i=il+1:it-1; ii=2*i-1;
     for j=1:jair; jj=2*j-1;
         x2(j)= x(ii,jj);y2(j)= y(ii,jj);
     end
-    plot (x2,y2); hold on;
+    plot (x2,y2,'k'); hold on;
 end
 y(:, jjair) = yau(:);
 for i=il+1:it-1;ii=2*i-1;
     for j=jair:jmax; jj=2*j-1;k=j-jair+1;
         x2(k)= x(ii,jj);y2(k)= y(ii,jj);
     end
-    plot (x2,y2); hold on;
+    plot (x2,y2,'k'); hold on;
 end
 for i=it:imax;ii=2*i-1;x1 = x(ii,:);
-    y1 = y(ii,:);plot (x1,y1); hold on;
+    y1 = y(ii,:);plot (x1,y1,'k'); hold on;
 end
-xlabel('X-axis', 'fontsize',18)
-ylabel('Y-axis', 'fontsize',18)
-title(['H-Grid for NACA-0012 airfoil '],'fontsize',18)
+xlabel('X-axis', 'fontsize',14)
+ylabel('Y-axis', 'fontsize',14)
+title('H-Grid for NACA-0012 airfoil ','fontsize',14)
 end
 function e=tri_sol(a,b,c,d,M)
 for i=2:M
@@ -337,24 +338,29 @@ for i = il : it
 end
 
 figure
-hold on
-grid on
-plot(xup,yup,xlo,ylo)
-plot(xup,Vru,xlo,Vrl)
-xlabel('Chord line', 'fontsize',18)
-ylabel('Non-dimensional velocity', 'fontsize',18)
-title('Non-dimensional velocity over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',12)
-legend('upper surface','lower surface','Location','best'),grid
+hold on;grid on
+plot(xup,Vru,'b',xlo,Vrl,'r','linewidth',2)
+plot(xup,yup,'k',xlo,ylo,'k','linewidth',2)
+
+xlabel('Chord line', 'fontsize',14)
+ylabel('Non-dimensional velocity', 'fontsize',14)
+title('Non-dimensional velocity over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',14)
+legend('upper surface','lower surface','Location','best');grid on;
+
+figure(1)
+plot(xup,yup,'c',xlo,ylo,'c','linewidth',1)
+area(xup,yup,'FaceColor','c')
+area(xlo,ylo,'FaceColor','c')
+xlim([-0.75 2.5])
 
 figure
-hold on
-grid on
-plot(xup,yup,xlo,ylo)
-plot(xup,Cpu,xlo,Cpl)
-xlabel('Chord line', 'fontsize',18)
-ylabel('Pressure coefficient', 'fontsize',18)
-title('Pressure coefficient over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',12)
-legend('upper surface','lower surface','Location','best'),grid
+hold on;grid on;
+plot(xup,Cpu,'b',xlo,Cpl,'r','linewidth',2)
+plot(xup,yup,'k',xlo,ylo,'k','linewidth',2)
+xlabel('Chord line', 'fontsize',14)
+ylabel('Pressure coefficient', 'fontsize',14)
+title('Pressure coefficient over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',14)
+legend('upper surface','lower surface','Location','best')
 
 figure
 i=1; ii=2*i-1; for j=1:jmax ; jj=2*j-1; x1(j)=x(ii,jj); y1(j)=y(ii,jj);end
