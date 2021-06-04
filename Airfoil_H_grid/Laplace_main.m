@@ -138,31 +138,15 @@ iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 for j = 2 : jmax-1
     if (j == jair - 1) ; for ii = 1 : iimax; y(ii, jjair) = yal(ii); end ; end
     if (j == jair + 1) ; for ii = 1 : iimax; y(ii, jjair) = yau(ii); end ; end
-    %        ' Calculation of the coefficients b(i),d(i),a(i) and c(i)
-    %        '    for   i=1
     b(1) = 0; d(1) = 1; a(1) = 0; c(1) = ps(1, j);
-    %        '    for   i=imax
     b(imax) = 0; d(imax) = 1; a(imax) = 0; c(imax) = ps(imax, j);
-    
-    
     for i = 2 : imax-1
-        
         ii = 2 * i - 1;
         jj = 2 * j - 1;
-        
         ip = ii + 1; jp = jj; [c11ip c12ip c22ip]=coef(ip,jp);
-        
         ip = ii - 1; jp = jj; [c11im c12im c22im]=coef(ip,jp);
-        
         ip = ii; jp = jj + 1; [c11jp c12jp c22jp]=coef(ip,jp);
-        
         ip = ii; jp = jj - 1; [c11jm c12jm c22jm]=coef(ip,jp);
-        
-        %   ' The difference equation is written in the following form
-        %   ' sij * ps(i,j) = sim * ps(i-1,j) + sip * ps(i+1,j) + sjm * ps(i,j-1)
-        %   '              + sjp * ps(i,j+1) + smm * ps(i-1,j-1) + smp * ps(i-1,j+1)
-        %   '              + spm * ps(i+1,j-1) + spp * ps(i+1,j+1)
-        
         sij = c11ip + c11im + r * r * (c22jp + c22jm);
         sim = c11im - r * r * (c12jp - c12jm) / 4;
         sip = c11ip + r * r * (c12jp - c12jm) / 4;
@@ -172,27 +156,20 @@ for j = 2 : jmax-1
         smp = -r * (c12im + c12jp) / 4;
         spm = -r * (c12ip + c12jm) / 4;
         spp = r * (c12ip + c12jp) / 4;
-        
         b(i) = -sim; d(i) = sij; a(i) = -sip;
         c(i) = sjm * psp(i, j - 1) + sjp * ps(i, j + 1) + smm * psp(i - 1, j - 1);
         c(i) = c(i) + smp * ps(i - 1, j + 1) + spm * psp(i + 1, j - 1) + spp * ps(i + 1, j + 1);
-        
         if ((j == jair) && (i >= il) && (i <= it)) ;
             b(i) = 0; d(i) = 1; a(i) = 0; c(i) = psp(i, j);
         end
-        
     end
-    
     ps_p=tri_sol(a,b,c,d,imax);
     for i=1:imax ; psp(i,j)=ps_p(i); end
 end
 end
 function Geometric
-
 global x y imax jmax jair il it cord yal yau
-% function determines the x(i,j) and y(i,j) for all points
 %  of H-grid for NACA-0012
-
 %  il = i of the leading edge
 %  it = i of the trailing edge
 %  cord = chord length
@@ -216,39 +193,28 @@ for ii = iil : iit; xp = x(ii, jjair);
     y(ii, jjair) = -5 * toc * (.2969 * sqrt(xp) - .126 * xp - .3537 * xp ^ 2 + .2843 * xp ^ 3 - .1015 * xp ^ 4);
 end
 for ii = iit : iimax; y(ii, jjair) = 0; end
-
 for ii = 1 : iimax; yal(ii) = y(ii, jjair); end
-
 for ii = 1 : iimax; y(ii, 1) = -cord; end
-
 for ii = 1 : iimax
     for jj = 2 : jjair - 1
         y(ii, jj) = y(ii, 1) + (jj - 1) * (y(ii, jjair) - y(ii, 1)) / (jjair - 1);
     end
 end
-
 %'toc is the thickness to chord ratio for NACA 0012  toc=.12
 toc = .12;
 for ii = 1 : iil; y(ii, jjair) = 0; end
 for ii = iil : iit; xp = x(ii, jjair);
     y(ii, jjair) = 5 * toc * (.2969 * sqrt(xp) - .126 * xp - .3537 * xp ^ 2 + .2843 * xp ^ 3 - .1015 * xp ^ 4);
 end
-
 for ii = iit : iimax; y(ii, jjair) = 0; end
-
 for ii = 1 : iimax; yau(ii) = y(ii, jjair); end
-
 for ii = 1 : iimax; y(ii, jjmax) = cord; end
-
 for ii = 1 : iimax
     for jj = jjair + 1 : jjmax - 1
         y(ii, jj) = y(ii, jjair) + (jj - jjair) * (y(ii, jjmax) - y(ii, jjair)) / (jjmax - jjair);
     end ;
 end
-
-
 % Plot the H-Grid
-% ---------------
 for j = 1 : jair - 1;    jj = 2 * j - 1;
     x1 = x(:,jj); y1=y(:,jj);plot (x1,y1); hold on;
 end
@@ -257,11 +223,9 @@ x1 = x(:,jj); y1=yau(:);plot (x1,y1); hold on
 for j = jair + 1 : jmax;  jj = 2 * j - 1;
     x1 = x(:, jj); y1 = y(:, jj);plot (x1,y1); hold on;
 end
-
 y(:, jjair) = yal(:);
 for i=1:il; ii=2*i-1; x1 = x(ii,:);
     y1 = y(ii,:);plot (x1,y1); hold on; end
-
 y(:, jjair) = yal(:);
 for i=il+1:it-1; ii=2*i-1;
     for j=1:jair; jj=2*j-1;
@@ -269,7 +233,6 @@ for i=il+1:it-1; ii=2*i-1;
     end
     plot (x2,y2); hold on;
 end
-
 y(:, jjair) = yau(:);
 for i=il+1:it-1;ii=2*i-1;
     for j=jair:jmax; jj=2*j-1;k=j-jair+1;
@@ -277,34 +240,26 @@ for i=il+1:it-1;ii=2*i-1;
     end
     plot (x2,y2); hold on;
 end
-
 for i=it:imax;ii=2*i-1;x1 = x(ii,:);
     y1 = y(ii,:);plot (x1,y1); hold on;
 end
-
 xlabel('X-axis', 'fontsize',18)
 ylabel('Y-axis', 'fontsize',18)
 title(['H-Grid for NACA-0012 airfoil '],'fontsize',18)
 end
 function results
-
-global x y imax jmax jair il it cord yal yau ps psp dx dy r d1 d2 omega Vinf cosa sina
+global x y imax jmax jair il it cord yal yau ps d1 d2 Vinf cosa sina
 iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
-% '____________________________________________________________________
-%'____________________________________________________________________________
-% results;   'function of calculation of the velocity and the pressure coefficients
-% '-------    ---------------------------------------------------------------------
+% calculation of the velocity and the pressure coefficients
 uxinf = Vinf * cosa; uyinf = Vinf * sina;
 i=1    ; for j=1:jmax ; a_vx(i,j)=uxinf; a_vy(i,j)=uyinf; end
 i=imax ; for j=1:jmax ; a_vx(i,j)=uxinf; a_vy(i,j)=uyinf; end
 j=1    ; for i=1:imax ; a_vx(i,j)=uxinf; a_vy(i,j)=uyinf; end
 j=jmax ; for i=1:imax ; a_vx(i,j)=uxinf; a_vy(i,j)=uyinf; end
 
-
 for i=2:imax-1
     for j=2:jmax-1
         ii=2*i-1;jj=2*j-1;
-        
         d1x = (x(ii + 1, jj) - x(ii - 1, jj)) / d1;
         d1y = (y(ii + 1, jj) - y(ii - 1, jj)) / d1;
         d2x = (x(ii, jj + 2) - x(ii, jj)) / d2;
@@ -312,21 +267,15 @@ for i=2:imax-1
         jaco = d1x * d2y - d1y * d2x;
         et1x = d2y / jaco; et1y = -d2x / jaco;
         et2x = -d1y / jaco; et2y = d1x / jaco;
-        
         d1u = (ps(i + 1, j) - ps(i - 1, j)) / 2 / d1;
-        
         d2u = (ps(i, j + 1) - ps(i, j - 1)) / 2 / d2;
-        
         a_vx(i,j) = d1u * et1y + d2u * et2y;
         a_vy(i,j) = -(d1u * et1x + d2u * et2x);
     end
 end
 
-%
 j = jair;
-% ' for upper surface
-% ' -----------------
-
+% for upper surface
 for ii = 1 : iimax; y(ii, jjair) = yau(ii); end
 for i = il : it
     ii = 2 * i - 1; jj = 2 * j - 1;
