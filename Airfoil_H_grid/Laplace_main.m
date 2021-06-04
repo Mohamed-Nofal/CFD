@@ -1,4 +1,4 @@
-clear all;   close all;   clc;
+clc;clear all;close all;   
 tic
 global x y imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
 
@@ -354,7 +354,7 @@ area(xlo,ylo,'FaceColor','c')
 xlim([-0.75 2.5])
 
 figure
-hold on;grid on;
+hold on;grid on;axis tight
 plot(xup,Cpu,'b',xlo,Cpl,'r','linewidth',2)
 plot(xup,yup,'k',xlo,ylo,'k','linewidth',2)
 xlabel('Chord line', 'fontsize',14)
@@ -367,16 +367,16 @@ i=1; ii=2*i-1; for j=1:jmax ; jj=2*j-1; x1(j)=x(ii,jj); y1(j)=y(ii,jj);end
 i=imax; ii=2*i-1; for j=1:jmax ; jj=2*j-1; x2(j)=x(ii,jj); y2(j)=y(ii,jj);end
 j=1; jj=2*j-1; for i=1:imax ; ii=2*i-1; x3(i)=x(ii,jj); y3(i)=y(ii,jj);end
 j=jmax; jj=2*j-1; for i=1:imax ; ii=2*i-1; x4(i)=x(ii,jj); y4(i)=y(ii,jj);end
-plot (x1,y1,x2,y2,x3,y3,x4,y4)
+plot (x1,y1,'b',x2,y2,'b',x3,y3,'b',x4,y4,'b')
 hold on
-xlabel('X-axis', 'fontsize',18)
-ylabel('Y-axis', 'fontsize',18)
-title(['Stream lines for the flow past NACA-0012 airfoil with angle of attack =10^o'],'fontsize',12)
+xlabel('X-axis', 'fontsize',14)
+ylabel('Y-axis', 'fontsize',14)
+title('Stream lines for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
 j=jair; jj=2*j-1;
 for i=il:it; ii=2*i-1;k=i-il+1;x5(k)= x(ii,jj);y5(k)=yal(ii); end
-plot (x5,y5); hold on;
+plot (x5,y5,'k','linewidth',2); hold on;
 for i=il:it; ii=2*i-1;k=i-il+1;x6(k)= x(ii,jj);y6(k)=yau(ii); end
-plot (x6,y6); hold on;
+plot (x6,y6,'k','linewidth',2); hold on;
 
 for ii = 1 : iimax; y(ii, jjair) = yau(ii); end
 for i=1:imax
@@ -387,7 +387,7 @@ for i=1:imax
     end
 end
 
-contour(x7,y7,p7,50)
+contour(x7,y7,p7,50,'b')
 hold on;
 
 for ii = 1 : iimax; y(ii, jjair) = yal(ii); end
@@ -399,7 +399,7 @@ for i=1:imax
     end
 end
 
-contour(x8,y8,p8,50)
+contour(x8,y8,p8,50,'b')
 hold on;
 
 figure
@@ -410,9 +410,9 @@ j=jmax; jj=2*j-1; for i=1:imax ; ii=2*i-1; x4(i)=x(ii,jj); y4(i)=y(ii,jj);end
 
 plot (x1,y1,x2,y2,x3,y3,x4,y4)
 hold on
-xlabel('X-axis', 'fontsize',18)
-ylabel('Y-axis', 'fontsize',18)
-title(['Velocity vector for the flow past NACA-0012 airfoil with angle of attack =10^o'],'fontsize',12)
+xlabel('X-axis', 'fontsize',14)
+ylabel('Y-axis', 'fontsize',14)
+title('Velocity vector for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
 
 j=jair; jj=2*j-1;
 for i=il:it; ii=2*i-1;k=i-il+1;x5(k)= x(ii,jj);y5(k)=yal(ii); end
@@ -443,10 +443,7 @@ for i=1:imax
 end
 quiver(x8,y8,a_vx_8,a_vy_8)
 hold on;
-xlabel('X-axis', 'fontsize',18)
-ylabel('Y-axis', 'fontsize',18)
-title(['Velocity vector for the flow past NACA-0012 airfoil with angle of attack =10^o'],'fontsize',12)
-
+axis tight
 % Calculation of the lift and drag coefficients
 cx = 0; cy = 0;
 j = jair; jj = jjair;
