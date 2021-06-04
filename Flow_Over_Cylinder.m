@@ -1,7 +1,7 @@
 %% Flow Over Clinder Using PSOR scheme
 
 clc;clear all;close all;    
-imax=5;jmax=5;
+imax=51;jmax=51;
 a     = 1;
 R     = 4*a;
 omega = 1;  
