@@ -344,7 +344,9 @@ xlabel('Chord line', 'fontsize',14)
 ylabel('Non-dimensional velocity', 'fontsize',14)
 title('Non-dimensional velocity over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',14)
 legend('upper surface','lower surface','Location','best');grid on;
-
+% figure
+% hold on
+% contour(linspace(-.75,2.5,71),linspace(0,1,71),Vru,50)
 figure(1)
 plot(xup,yup,'c',xlo,ylo,'c','linewidth',1)
 area(xup,yup,'FaceColor','c')
