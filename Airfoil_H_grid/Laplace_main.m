@@ -89,7 +89,6 @@ title(['Convergence history using Line-SOR for the flow past NACA-0012 airfoil w
 results
 toc
 
-
 %% Helping Functions
 function [c11,c12,c22]=coef(ip,jp)
 global x y d1 d2
@@ -248,6 +247,18 @@ end
 xlabel('X-axis', 'fontsize',18)
 ylabel('Y-axis', 'fontsize',18)
 title(['H-Grid for NACA-0012 airfoil '],'fontsize',18)
+end
+function e=tri_sol(a,b,c,d,M)
+for i=2:M
+    t = b(i) / d(i - 1);
+    d(i) = d(i) - t * a(i - 1);
+    c(i) = c(i) - t * c(i - 1);
+end
+e(M) = c(M) / d(M);
+for k=2:M
+    i = M - k + 1;
+    e(i) = (c(i) - a(i) * e(i + 1)) / d(i);
+end
 end
 function results
 global x y imax jmax jair il it cord yal yau ps d1 d2 Vinf cosa sina
@@ -445,16 +456,4 @@ end
 cl = cy * cosa - cx * sina
 cd = cy * sina + cx * cosa
 
-end
-function e=tri_sol(a,b,c,d,M)
-for i=2:M
-    t = b(i) / d(i - 1);
-    d(i) = d(i) - t * a(i - 1);
-    c(i) = c(i) - t * c(i - 1);
-end
-e(M) = c(M) / d(M);
-for k=2:M
-    i = M - k + 1;
-    e(i) = (c(i) - a(i) * e(i + 1)) / d(i);
-end
 end
