@@ -1,12 +1,12 @@
 clc;clear all;close all; profile on  
 tic
-global x y imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
+global x y yal yau imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
 
 %% Input Data
 Vinf  = 10; 
 alfad = 5;
 cord  = 1; 
-nitd  = 0;il = 31; it = 71; imax = 131; jair = 26; jmax = 51;
+nitd  = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
 omega = 10; per = 1*10^-6; nmax = 100; 
 %% Calculated Data
 alfa  = alfad * pi / 180;
@@ -55,7 +55,7 @@ for n=1:nmax
 %while erps > .001 ;   %n = nitd;   %n = n + 1;
 % Calculation of new values of ps(i,j) = psp(i,j)
     if Method == 0 ;  P_SOR ; end
-    if Method == 1 ;  L_SOR  ; end
+    if Method == 1 ;  psp=L_SOR(y ,imax, jmax, jair, il ,it ,yal, yau, r, x, d1, d2,ps,psp)  ; end
     % Errors calculation
     mder = 0;
     for i = 2 : nx
@@ -134,8 +134,8 @@ for j = 2 : jmax - 1
     if j == jair; for i=il:it ;psp(i,j)=ps(i,j);end; end
 end
 end
-function L_SOR
-global y imax jmax jair il it yal yau ps psp r x d1 d2
+function psp=L_SOR(y ,imax, jmax, jair, il ,it ,yal, yau, r, x, d1, d2 ,ps,psp)
+ 
 iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 for j = 2 : jmax-1
     if (j == jair - 1) ; for ii = 1 : iimax; y(ii, jjair) = yal(ii); end ; end
@@ -353,7 +353,7 @@ figure(1)
 plot(xup,yup,'c',xlo,ylo,'c','linewidth',1)
 area(xup,yup,'FaceColor','c')
 area(xlo,ylo,'FaceColor','c')
-xlim([-0.75 2.5])
+xlim([-0.75 1.75])
 
 figure
 hold on;grid on;axis tight
