@@ -1,13 +1,13 @@
 clc;clear all;close all; profile on
 tic
-global x y yal yau imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
+global yal yau imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
 
 %% Input Data
 Vinf  = 100;
 alfad = 5;
 cord  = 1;
 nitd  = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
-omega = 1; per = 1*10^-6; nmax = 1000;
+omega = 1; per = 1*10^-6; nmax = 100;
 %% Calculated Data
 alfa  = alfad * pi / 180;
 cosa  = cos(alfa); sina = sin(alfa);
@@ -19,10 +19,10 @@ dx = cord / (it - il); dy = ly / ny;
 r  = dx / dy; t1 = omega / (2 * (1 + r * r));
 t2 = t1 * r * r;
 %% Call Geometric Function
-Geometric
+[x,y]=Geometric;
 %% Method of solution PSOR or LSOR
-Method = 0 ; %if you want to solve by PSOR
-% Method = 1 ; %if you want to solve by LSOR
+% Method = 0 ; %if you want to solve by PSOR
+Method = 1 ; %if you want to solve by LSOR
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
 i = 1;
@@ -54,7 +54,7 @@ psp = ps;
 for n=1:nmax
     %while erps > .001 ;   %n = nitd;   %n = n + 1;
     % Calculation of new values of ps(i,j) = psp(i,j)
-    if Method == 0 ;  P_SOR ; end
+    if Method == 0 ;  P_SOR(x,y) ; end
     if Method == 1 ;  psp=L_SOR(y ,imax, jmax, jair, il ,it ,yal, yau, r, x, d1, d2,ps,psp)  ; end
     % Errors calculation
     mder = 0;
@@ -104,7 +104,7 @@ xlabel('Iteration number', 'fontsize',14)
 ylabel('Log_1_0 (Error)', 'fontsize',14)
 title('Convergence history using LSOR for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
 %% Call Result Function
-results
+results(x, y, imax, jmax, jair, il, it, cord, yal, yau, ps, d1, d2, Vinf, cosa, sina ,psp)
 toc
 profile off
 profile viewer
@@ -121,8 +121,8 @@ c11 = (d2x * d2x + d2y * d2y) / jaco;
 c12 = -(d1x * d2x + d1y * d2y) / jaco;
 c22 = (d1x * d1x + d1y * d1y) / jaco;
 end
-function P_SOR
-global y imax jmax jair il it yal yau ps psp r omega x d1 d2
+function P_SOR(x,y)
+global  imax jmax jair il it yal yau ps psp r omega  d1 d2
 iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 for j = 2 : jmax - 1
     if j == jair - 1 ; for ii = 1 : iimax; y(ii, jjair) = yal(ii); end; end
@@ -187,8 +187,8 @@ for j = 2 : jmax-1
     for i=1:imax ; psp(i,j)=ps_p(i); end
 end
 end
-function Geometric
-global x y imax jmax jair il it cord yal yau
+function [x,y]=Geometric
+global imax jmax jair il it cord yal yau
 %  of H-grid for NACA-0012
 %  il = i of the leading edge
 %  it = i of the trailing edge
@@ -280,8 +280,7 @@ for k=2:M
     e(i) = (c(i) - a(i) * e(i + 1)) / d(i);
 end
 end
-function results
-global x y imax jmax jair il it cord yal yau ps d1 d2 Vinf cosa sina psp
+function results(x, y, imax, jmax, jair, il, it, cord, yal, yau, ps, d1, d2, Vinf, cosa, sina ,psp)
 iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 % calculation of the velocity and the pressure coefficients
 uxinf = Vinf * cosa; uyinf = Vinf * sina;
