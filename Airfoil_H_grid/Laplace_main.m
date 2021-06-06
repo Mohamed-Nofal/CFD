@@ -1,12 +1,13 @@
-clc;clear all;close all;   
+clc;clear all;close all; profile on  
 tic
 global x y imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
+
 %% Input Data
-Vinf  = 100; 
-alfad = 10;
+Vinf  = 10; 
+alfad = 5;
 cord  = 1; 
-nitd = 0;il = 31; it = 71; imax = 131; jair = 26; jmax = 51;
-omega = 1; per = .000001; nmax = 100; 
+nitd  = 0;il = 31; it = 71; imax = 131; jair = 26; jmax = 51;
+omega = 1; per = 1*10^-6; nmax = 51; 
 %% Calculated Data
 alfa  = alfad * pi / 180;
 cosa  = cos(alfa); sina = sin(alfa);
@@ -87,9 +88,11 @@ title('Convergence history using LSOR for the flow past NACA-0012 airfoil with a
 %% Call Result Function
 results
 toc
+profile off
+profile viewer
 %% Helping Functions
-function [c11,c12,c22]=coef(ip,jp)
-global x y d1 d2
+function [c11,c12,c22]=coef(ip,jp,x,y, d1, d2)
+% global x y d1 d2
 % calculate the metric terms and the jacobian.
 d1x = (x(ip + 1, jp) - x(ip - 1, jp)) / d1;
 d1y = (y(ip + 1, jp) - y(ip - 1, jp)) / d1;
@@ -109,10 +112,10 @@ for j = 2 : jmax - 1
     for i = 2 : imax - 1
         ii = 2 * i - 1;
         jj = 2 * j - 1;
-        ip = ii + 1; jp = jj; [c11ip c12ip c22ip]=coef(ip,jp);
-        ip = ii - 1; jp = jj; [c11im c12im c22im]=coef(ip,jp);
-        ip = ii; jp = jj + 1; [c11jp c12jp c22jp]=coef(ip,jp);
-        ip = ii; jp = jj - 1; [c11jm c12jm c22jm]=coef(ip,jp);
+        ip = ii + 1; jp = jj; [c11ip c12ip c22ip]=coef(ip,jp,x ,y, d1, d2);
+        ip = ii - 1; jp = jj; [c11im c12im c22im]=coef(ip,jp,x ,y, d1, d2);
+        ip = ii; jp = jj + 1; [c11jp c12jp c22jp]=coef(ip,jp,x ,y, d1, d2);
+        ip = ii; jp = jj - 1; [c11jm c12jm c22jm]=coef(ip,jp,x ,y, d1, d2);
         sij = c11ip + c11im + r * r * (c22jp + c22jm);
         sim = c11im - r * r * (c12jp - c12jm) / 4;
         sip = c11ip + r * r * (c12jp - c12jm) / 4;
@@ -132,7 +135,7 @@ for j = 2 : jmax - 1
 end
 end
 function L_SOR
-global y imax jmax jair il it yal yau ps psp r
+global y imax jmax jair il it yal yau ps psp r x d1 d2
 iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 for j = 2 : jmax-1
     if (j == jair - 1) ; for ii = 1 : iimax; y(ii, jjair) = yal(ii); end ; end
@@ -142,10 +145,10 @@ for j = 2 : jmax-1
     for i = 2 : imax-1
         ii = 2 * i - 1;
         jj = 2 * j - 1;
-        ip = ii + 1; jp = jj; [c11ip c12ip c22ip]=coef(ip,jp);
-        ip = ii - 1; jp = jj; [c11im c12im c22im]=coef(ip,jp);
-        ip = ii; jp = jj + 1; [c11jp c12jp c22jp]=coef(ip,jp);
-        ip = ii; jp = jj - 1; [c11jm c12jm c22jm]=coef(ip,jp);
+        ip = ii + 1; jp = jj; [c11ip c12ip c22ip]=coef(ip,jp,x,y,d1,d2);
+        ip = ii - 1; jp = jj; [c11im c12im c22im]=coef(ip,jp,x,y,d1,d2);
+        ip = ii; jp = jj + 1; [c11jp c12jp c22jp]=coef(ip,jp,x,y,d1,d2);
+        ip = ii; jp = jj - 1; [c11jm c12jm c22jm]=coef(ip,jp,x,y,d1,d2);
         sij = c11ip + c11im + r * r * (c22jp + c22jm);
         sim = c11im - r * r * (c12jp - c12jm) / 4;
         sip = c11ip + r * r * (c12jp - c12jm) / 4;
@@ -344,9 +347,8 @@ xlabel('Chord line', 'fontsize',14)
 ylabel('Non-dimensional velocity', 'fontsize',14)
 title('Non-dimensional velocity over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',14)
 legend('upper surface','lower surface','Location','best');grid on;
-% figure
-% hold on
-% contour(linspace(-.75,2.5,71),linspace(0,1,71),Vru,50)
+
+
 figure(1)
 plot(xup,yup,'c',xlo,ylo,'c','linewidth',1)
 area(xup,yup,'FaceColor','c')
@@ -444,6 +446,32 @@ end
 quiver(x8,y8,a_vx_8,a_vy_8)
 hold on;
 axis tight
+
+figure
+hold on
+a_vu = sqrt(a_vx_7.^2+a_vy_7.^2);
+contourf(x7,y7,a_vu,'LineColor','none')
+a_vl = sqrt(a_vx_8.^2+a_vy_8.^2);
+contourf(x8,y8,a_vl,'LineColor','none')
+plot(xup,yup,'k','LineWidth',1.2)
+plot(xlo,ylo,'k','LineWidth',1.2)
+colormap('jet');
+colorbar
+title('Velocity Contor for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
+
+figure
+hold on
+Cpu = 1-a_vu.^2/Vinf^2 ;
+contourf(x7,y7,Cpu,'LineColor','none')
+Cpl = 1-a_vl.^2/Vinf^2 ;
+contourf(x8,y8,Cpl,'LineColor','none')
+plot(xup,yup,'k','LineWidth',1.2)
+plot(xlo,ylo,'k','LineWidth',1.2)
+axis tight
+colormap('jet');
+colorbar
+title('Pressure Contor for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
+
 % Calculation of the lift and drag coefficients
 cx = 0; cy = 0;
 j = jair; jj = jjair;
@@ -458,5 +486,4 @@ for i = il : it - 1
 end
 cl = cy * cosa - cx * sina
 cd = cy * sina + cx * cosa
-
 end
