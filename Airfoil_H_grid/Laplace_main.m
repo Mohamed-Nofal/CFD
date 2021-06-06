@@ -127,7 +127,7 @@ iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 for j = 2 : jmax - 1
     if j == jair - 1 ; for ii = 1 : iimax; y(ii, jjair) = yal(ii); end; end
     if j == jair + 1 ; for ii = 1 : iimax; y(ii, jjair) = yau(ii); end; end
-    parfor i = 2 : imax - 1
+    for i = 2 : imax - 1
         ii = 2 * i - 1;
         jj = 2 * j - 1;
         ip = ii + 1; jp = jj; [c11ip c12ip c22ip]=coef(ip,jp,x ,y, d1, d2);
