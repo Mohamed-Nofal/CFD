@@ -3,7 +3,7 @@ tic
 global imax jmax jair il it cord yal yau
 
 %% Input Data
-Vinf  = 100;
+Vinf  = 10;
 alfad = 5;
 cord  = 1;
 nitd  = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
@@ -22,7 +22,7 @@ t2 = t1 * r * r;
 [x,y]=Geometric;
 %% Method of solution PSOR or LSOR
 Method = 0 ; %if you want to solve by PSOR
-Method = 1 ; %if you want to solve by LSOR
+% Method = 1 ; %if you want to solve by LSOR
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
 i = 1;
