@@ -7,7 +7,7 @@ Vinf  = 10;
 alfad = 5;
 cord  = 1; 
 nitd  = 0;il = 31; it = 71; imax = 131; jair = 26; jmax = 51;
-omega = 1; per = 1*10^-6; nmax = 51; 
+omega = 10; per = 1*10^-6; nmax = 100; 
 %% Calculated Data
 alfa  = alfad * pi / 180;
 cosa  = cos(alfa); sina = sin(alfa);
