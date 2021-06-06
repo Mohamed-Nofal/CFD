@@ -1,6 +1,6 @@
 clc;clear all;close all; profile on
 tic
-global yal yau imax jmax jair il it cord ps psp dx dy r d1 d2 omega Vinf cosa sina
+global imax jmax jair il it cord yal yau
 
 %% Input Data
 Vinf  = 100;
@@ -21,7 +21,7 @@ t2 = t1 * r * r;
 %% Call Geometric Function
 [x,y]=Geometric;
 %% Method of solution PSOR or LSOR
-% Method = 0 ; %if you want to solve by PSOR
+Method = 0 ; %if you want to solve by PSOR
 Method = 1 ; %if you want to solve by LSOR
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
@@ -54,7 +54,7 @@ psp = ps;
 for n=1:nmax
     %while erps > .001 ;   %n = nitd;   %n = n + 1;
     % Calculation of new values of ps(i,j) = psp(i,j)
-    if Method == 0 ;  P_SOR(x,y) ; end
+    if Method == 0 ;  psp=P_SOR(x,y,imax, jmax, jair, il, it, yal, yau, ps, r, omega, d1, d2) ; end
     if Method == 1 ;  psp=L_SOR(y ,imax, jmax, jair, il ,it ,yal, yau, r, x, d1, d2,ps,psp)  ; end
     % Errors calculation
     mder = 0;
@@ -121,13 +121,13 @@ c11 = (d2x * d2x + d2y * d2y) / jaco;
 c12 = -(d1x * d2x + d1y * d2y) / jaco;
 c22 = (d1x * d1x + d1y * d1y) / jaco;
 end
-function P_SOR(x,y)
-global  imax jmax jair il it yal yau ps psp r omega  d1 d2
+function psp=P_SOR(x,y,imax, jmax, jair, il, it, yal, yau, ps, r, omega, d1, d2)
+  
 iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 for j = 2 : jmax - 1
     if j == jair - 1 ; for ii = 1 : iimax; y(ii, jjair) = yal(ii); end; end
     if j == jair + 1 ; for ii = 1 : iimax; y(ii, jjair) = yau(ii); end; end
-    for i = 2 : imax - 1
+    parfor i = 2 : imax - 1
         ii = 2 * i - 1;
         jj = 2 * j - 1;
         ip = ii + 1; jp = jj; [c11ip c12ip c22ip]=coef(ip,jp,x ,y, d1, d2);
