@@ -1,6 +1,5 @@
 clc;clear all;close all; profile on
 tic
-global  x y imax jmax jair il it cord yal yau ps psp dx dy r d1 d2 omega Vinf cosa sina
 
 %% Input Data
 Vinf  = 10;
@@ -19,10 +18,10 @@ dx = cord / (it - il); dy = ly / ny;
 r  = dx / dy; t1 = omega / (2 * (1 + r * r));
 t2 = t1 * r * r;
 %% Call Geometric Function
-[x,y]=Geometric;
+[x,y,yal,yau]=Geometric(imax,jmax, jair, il, it, cord);
 %% Method of solution PSOR or LSOR
-Method = 0 ; %if you want to solve by PSOR
-% Method = 1 ; %if you want to solve by LSOR
+% Method = 0 ; %if you want to solve by PSOR
+Method = 1 ; %if you want to solve by LSOR
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
 i = 1;
@@ -187,8 +186,7 @@ for j = 2 : jmax-1
     for i=1:imax ; psp(i,j)=ps_p(i); end
 end
 end
-function [x,y]=Geometric
-global imax jmax jair il it cord yal yau
+function [x,y,yal,yau]=Geometric(imax,jmax, jair, il, it, cord)
 %  of H-grid for NACA-0012
 %  il = i of the leading edge
 %  it = i of the trailing edge
