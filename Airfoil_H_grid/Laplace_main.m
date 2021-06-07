@@ -1,6 +1,6 @@
 clc;clear all;close all; profile on
 tic
-global imax jmax jair il it cord yal yau
+global  x y imax jmax jair il it cord yal yau ps psp dx dy r d1 d2 omega Vinf cosa sina
 
 %% Input Data
 Vinf  = 10;
@@ -122,7 +122,7 @@ c12 = -(d1x * d2x + d1y * d2y) / jaco;
 c22 = (d1x * d1x + d1y * d1y) / jaco;
 end
 function psp=P_SOR(x,y,imax, jmax, jair, il, it, yal, yau, ps, r, omega, d1, d2)
-  
+
 iimax = 2*imax-1 ; jjmax = 2*jmax-1;jjair = 2*jair-1;
 for j = 2 : jmax - 1
     if j == jair - 1 ; for ii = 1 : iimax; y(ii, jjair) = yal(ii); end; end
@@ -381,32 +381,44 @@ ylabel('Pressure coefficient', 'fontsize',14)
 title('Pressure coefficient over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',14)
 legend('upper surface','lower surface','Location','best')
 
-figure ;
-xodds  = zeros(imax,jmax);
-yodds  = zeros(imax,jmax);
-yalodd = zeros(1,jmax);
-yauodd = zeros(1,jmax);
-for ix=1:2:iimax
-    ixr=(ix+1)/2;
-    yalodd(ixr) =  yal(ix);
-    yauodd(ixr) =  yau(ix);
-    for jx=1:2:jjmax
-        jxr=(jx+1)/2;
-        xodds(ixr,jxr)= x(ix,jx);
-        yodds(ixr,jxr)= y(ix,jx);
-    end
-end
-for i=il:it ; ii=2*i-1; k=i-il+1;
-    x5(k)= x(ii,jj); y5(k)=yal(ii);
-    x6(k)= x(ii,jj); y6(k)=yau(ii);
-end
-plot (x6,y6,'k','linewidth',2); hold on;
-PSI=[psp(:,1:jair),psp(:,jair:end)];
-xodds=[xodds(:,1:jair),xodds(:,jair:end)];
-yodds=[yodds(:,1:jair-1),yalodd',yauodd',yodds(:,jair+1:end)];
-contour(xodds,yodds,PSI,150,'b') ;
+figure
+i=1; ii=2*i-1; for j=1:jmax ; jj=2*j-1; x1(j)=x(ii,jj); y1(j)=y(ii,jj);end
+i=imax; ii=2*i-1; for j=1:jmax ; jj=2*j-1; x2(j)=x(ii,jj); y2(j)=y(ii,jj);end
+j=1; jj=2*j-1; for i=1:imax ; ii=2*i-1; x3(i)=x(ii,jj); y3(i)=y(ii,jj);end
+j=jmax; jj=2*j-1; for i=1:imax ; ii=2*i-1; x4(i)=x(ii,jj); y4(i)=y(ii,jj);end
+
+plot (x1,y1,x2,y2,x3,y3,x4,y4)
+hold on;axis equal
+
+j=jair; jj=2*j-1;
+for i=il:it; ii=2*i-1;k=i-il+1;x5(k)= x(ii,jj);y5(k)=yal(ii); end
 plot (x5,y5,'k','linewidth',2); hold on;
 for i=il:it; ii=2*i-1;k=i-il+1;x6(k)= x(ii,jj);y6(k)=yau(ii); end
+plot (x6,y6,'k','linewidth',2); hold on;
+area(x5,y5,'FaceColor','k')
+area(x6,y6,'FaceColor','k')
+for ii = 1 : iimax; y(ii, jjair) = yau(ii); end
+for i=1:imax
+    ii=2*i-1;
+    for j=jair:jmax
+        jj=2*j-1;
+        k=j-jair+1; x7(i,k)=x(ii,jj); y7(i,k)=y(ii,jj);p7(i,k)=ps(i,j);
+    end
+end
+
+contour(x7,y7,p7,70,'b')
+hold on;
+
+for ii = 1 : iimax; y(ii, jjair) = yal(ii); end
+for i=1:imax
+    ii=2*i-1;
+    for j=1:jair
+        jj=2*j-1;
+        x8(i,j)=x(ii,jj); y8(i,j)=y(ii,jj);p8(i,j)=ps(i,j);
+    end
+end
+%              figure
+contour(x8,y8,p8,70,'b')
 xlabel('X-axis', 'fontsize',14)
 ylabel('Y-axis', 'fontsize',14)
 title('Stream lines for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
@@ -475,6 +487,7 @@ Cpl = 1-a_vl.^2/Vinf^2 ;
 contourf(x8,y8,Cpl,'LineColor','none')
 plot(xup,yup,'k','LineWidth',1.2)
 plot(xlo,ylo,'k','LineWidth',1.2)
+
 axis tight
 colormap('jet');
 colorbar
