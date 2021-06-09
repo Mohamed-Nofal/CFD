@@ -1,9 +1,8 @@
 clc;clear all;close all; profile on
 tic
-
 %% Input Data
 Vinf  = 10;
-alfad = 5;
+alfad = 0;
 cord  = 1;
 nitd  = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
 omega = 1; per = 1*10^-6; nmax = 100;
@@ -20,8 +19,8 @@ t2 = t1 * r * r;
 %% Call Geometric Function
 [x,y,yal,yau]=Geometric(imax,jmax, jair, il, it, cord);
 %% Method of solution PSOR or LSOR
-% Method = 0 ; %if you want to solve by PSOR
-Method = 1 ; %if you want to solve by LSOR
+Method = 0 ; %if you want to solve by PSOR
+% Method = 1 ; %if you want to solve by LSOR
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
 i = 1;
@@ -101,7 +100,7 @@ plot(a_n,a_lmder,'linewidth',2)
 grid on;axis tight
 xlabel('Iteration number', 'fontsize',14)
 ylabel('Log_1_0 (Error)', 'fontsize',14)
-title('Convergence history using LSOR for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
+title('Convergence history using LSOR for the flow past NACA-0012 airfoil ','fontsize',14)
 %% Call Result Function
 results(x, y, imax, jmax, jair, il, it, cord, yal, yau, ps, d1, d2, Vinf, cosa, sina ,psp)
 toc
@@ -360,7 +359,7 @@ plot(xup,yup,'k',xlo,ylo,'k','linewidth',2)
 
 xlabel('Chord line', 'fontsize',14)
 ylabel('Non-dimensional velocity', 'fontsize',14)
-title('Non-dimensional velocity over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',14)
+title('Non-dimensional velocity over NACA-0012 airfoil surface','fontsize',14)
 legend('upper surface','lower surface','Location','best');grid on;
 
 
@@ -376,7 +375,7 @@ plot(xup,Cpu,'b',xlo,Cpl,'r','linewidth',2)
 plot(xup,yup,'k',xlo,ylo,'k','linewidth',2)
 xlabel('Chord line', 'fontsize',14)
 ylabel('Pressure coefficient', 'fontsize',14)
-title('Pressure coefficient over NACA-0012 airfoil surface(angle of attack =10^o)','fontsize',14)
+title('Pressure coefficient over NACA-0012 airfoil surface','fontsize',14)
 legend('upper surface','lower surface','Location','best')
 
 figure
@@ -404,7 +403,7 @@ for i=1:imax
     end
 end
 
-contour(x7,y7,p7,70,'b')
+contour(x7,y7,p7,30,'b')
 hold on;
 
 for ii = 1 : iimax; y(ii, jjair) = yal(ii); end
@@ -416,10 +415,10 @@ for i=1:imax
     end
 end
 %              figure
-contour(x8,y8,p8,70,'b')
+contour(x8,y8,p8,30,'b')
 xlabel('X-axis', 'fontsize',14)
 ylabel('Y-axis', 'fontsize',14)
-title('Stream lines for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
+title('Stream lines for the flow past NACA-0012 airfoil ','fontsize',14)
 
 
 figure
@@ -432,7 +431,7 @@ plot (x1,y1,x2,y2,x3,y3,x4,y4)
 hold on
 xlabel('X-axis', 'fontsize',14)
 ylabel('Y-axis', 'fontsize',14)
-title('Velocity vector for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
+title('Velocity vector for the flow past NACA-0012 airfoil ','fontsize',14)
 
 j=jair; jj=2*j-1;
 for i=il:it; ii=2*i-1;k=i-il+1;x5(k)= x(ii,jj);y5(k)=yal(ii); end
@@ -475,7 +474,7 @@ plot(xup,yup,'k','LineWidth',1.2)
 plot(xlo,ylo,'k','LineWidth',1.2)
 colormap('jet');
 colorbar
-title('Velocity Contor for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
+title('Velocity Contor for the flow past NACA-0012 airfoil ','fontsize',14)
 
 figure
 hold on
@@ -489,7 +488,7 @@ plot(xlo,ylo,'k','LineWidth',1.2)
 axis tight
 colormap('jet');
 colorbar
-title('Pressure Contor for the flow past NACA-0012 airfoil with angle of attack =10^o','fontsize',14)
+title('Pressure Contor for the flow past NACA-0012 airfoil ','fontsize',14)
 
 % Calculation of the lift and drag coefficients
 cx = 0; cy = 0;
@@ -505,5 +504,16 @@ for i = il : it - 1
 end
 cl = cy * cosa - cx * sina
 cd = cy * sina + cx * cosa
+
+% for i=1:imax-1
+%     nx=Y(i+1,1)-Y(i,1);
+%     ny=-(X(i+1,1)-X(i,1));
+%     Cx=Cx-nx*(Cp(i+1,1)+Cp(i,1))/2;
+%     Cy=Cy-ny*(Cp(i+1,1)+Cp(i,1))/2;
+% end
+% Cl=Cy*cosd(alpha)-Cx*sind(alpha);
+% Cd=abs(Cy*sind(alpha)+Cx*cosd(alpha));
+
+
 
 end
