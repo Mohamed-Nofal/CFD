@@ -5,7 +5,7 @@ Vinf  = 10;
 alfad = 0;
 cord  = 1;
 nitd  = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
-omega = 1; per = 1*10^-6; nmax = 100;
+omega = 1; per = 1*10^-6; nmax = 1000;
 %% Calculated Data
 alfa  = alfad * pi / 180;
 cosa  = cos(alfa); sina = sin(alfa);
@@ -19,8 +19,8 @@ t2 = t1 * r * r;
 %% Call Geometric Function
 [x,y,yal,yau]=Geometric(imax,jmax, jair, il, it, cord);
 %% Method of solution PSOR or LSOR
-Method = 0 ; %if you want to solve by PSOR
-% Method = 1 ; %if you want to solve by LSOR
+% Method = 0 ; %if you want to solve by PSOR
+Method = 1 ; %if you want to solve by LSOR
 %% Boundary values  & Initialization
 ps(1, 1) = 0;
 i = 1;
@@ -464,31 +464,31 @@ quiver(x8,y8,a_vx_8,a_vy_8)
 hold on;
 axis tight
 
-figure
-hold on
-a_vu = sqrt(a_vx_7.^2+a_vy_7.^2);
-contourf(x7,y7,a_vu,'LineColor','none')
-a_vl = sqrt(a_vx_8.^2+a_vy_8.^2);
-contourf(x8,y8,a_vl,'LineColor','none')
-plot(xup,yup,'k','LineWidth',1.2)
-plot(xlo,ylo,'k','LineWidth',1.2)
-colormap('jet');
-colorbar
-title('Velocity Contor for the flow past NACA-0012 airfoil ','fontsize',14)
+% figure
+% hold on
+% a_vu = sqrt(a_vx_7.^2+a_vy_7.^2);
+% contourf(x7,y7,a_vu,'LineColor','none')
+% a_vl = sqrt(a_vx_8.^2+a_vy_8.^2);
+% contourf(x8,y8,a_vl,'LineColor','none')
+% plot(xup,yup,'k','LineWidth',1.2)
+% plot(xlo,ylo,'k','LineWidth',1.2)
+% colormap('jet');
+% colorbar
+% title('Velocity Contor for the flow past NACA-0012 airfoil ','fontsize',14)
 
-figure
-hold on
-Cpu = 1-a_vu.^2/Vinf^2 ;
-contourf(x7,y7,Cpu,'LineColor','none')
-Cpl = 1-a_vl.^2/Vinf^2 ;
-contourf(x8,y8,Cpl,'LineColor','none')
-plot(xup,yup,'k','LineWidth',1.2)
-plot(xlo,ylo,'k','LineWidth',1.2)
-
-axis tight
-colormap('jet');
-colorbar
-title('Pressure Contor for the flow past NACA-0012 airfoil ','fontsize',14)
+% figure
+% hold on
+% Cpu2 = 1-a_vu.^2/Vinf^2 ;
+% contourf(x7,y7,Cpu2,'LineColor','none')
+% Cpl2 = 1-a_vl.^2/Vinf^2 ;
+% contourf(x8,y8,Cpl2,'LineColor','none')
+% plot(xup,yup,'k','LineWidth',1.2)
+% plot(xlo,ylo,'k','LineWidth',1.2)
+% 
+% axis tight
+% colormap('jet');
+% colorbar
+% title('Pressure Contor for the flow past NACA-0012 airfoil ','fontsize',14)
 
 % Calculation of the lift and drag coefficients
 cx = 0; cy = 0;
@@ -498,22 +498,22 @@ for i = il : it - 1
     x1 = x(ii, jj); y1 = yau(ii); x2 = x(ii + 2, jj); y2 = yau(ii + 2);
     cx = cx + .5 * (Cpu(i) + Cpu(i + 1)) * (y2 - y1) / cord;
     cy = cy - .5 * (Cpu(i) + Cpu(i + 1)) * (x2 - x1) / cord;
+    cm_u_=cy*(x1-0.25);
     x1 = x(ii, jj); y1 = yal(ii); x2 = x(ii + 2, jj); y2 = yal(ii + 2);
     cx = cx + .5 * (Cpl(i) + Cpl(i + 1)) * (y2 - y1) / cord;
     cy = cy + .5 * (Cpl(i) + Cpl(i + 1)) * (x2 - x1) / cord;
+   
+    cm_l_=cy*(x1-0.25);
+   M_Cx(i)=cy;
+   M_X(i)=x1;
+
 end
 cl = cy * cosa - cx * sina
 cd = cy * sina + cx * cosa
 
-% for i=1:imax-1
-%     nx=Y(i+1,1)-Y(i,1);
-%     ny=-(X(i+1,1)-X(i,1));
-%     Cx=Cx-nx*(Cp(i+1,1)+Cp(i,1))/2;
-%     Cy=Cy-ny*(Cp(i+1,1)+Cp(i,1))/2;
-% end
-% Cl=Cy*cosd(alpha)-Cx*sind(alpha);
-% Cd=abs(Cy*sind(alpha)+Cx*cosd(alpha));
-
-
+% cm_u_
+% cm_l_
+trapz(M_Cx,M_X)
+% cm_u_-cm_l_
 
 end
