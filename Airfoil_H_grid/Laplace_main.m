@@ -2,7 +2,7 @@ clc;clear all;close all; profile on
 tic
 %% Input Data
 Vinf  = 10;
-alfad = 0;
+alfad = -2.5;
 cord  = 1;
 nitd  = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
 omega = 1; per = 1*10^-6; nmax = 1000;
@@ -498,12 +498,12 @@ for i = il : it - 1
     x1 = x(ii, jj); y1 = yau(ii); x2 = x(ii + 2, jj); y2 = yau(ii + 2);
     cx = cx + .5 * (Cpu(i) + Cpu(i + 1)) * (y2 - y1) / cord;
     cy = cy - .5 * (Cpu(i) + Cpu(i + 1)) * (x2 - x1) / cord;
-    cm_u_=cy*(x1-0.25);
+%     cm_u_=cy*(x1-0.25);
     x1 = x(ii, jj); y1 = yal(ii); x2 = x(ii + 2, jj); y2 = yal(ii + 2);
     cx = cx + .5 * (Cpl(i) + Cpl(i + 1)) * (y2 - y1) / cord;
     cy = cy + .5 * (Cpl(i) + Cpl(i + 1)) * (x2 - x1) / cord;
    
-    cm_l_=cy*(x1-0.25);
+%     cm_l_=cy*(x1-0.25);
    M_Cx(i)=cy;
    M_X(i)=x1;
 
@@ -513,7 +513,9 @@ cd = cy * sina + cx * cosa
 
 % cm_u_
 % cm_l_
-trapz(M_Cx,M_X)
+% trapz(M_Cx,M_X)
+% trapz((Cpl-Cpu)*cosa,(xup-0.25))
+trapz((Cpl-Cpu).*yup,(xup-0.25))
 % cm_u_-cm_l_
-
+% cl=trapz(Cpl-Cpu,sqrt(xup^2+yup^2))
 end
