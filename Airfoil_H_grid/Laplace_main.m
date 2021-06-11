@@ -1,8 +1,8 @@
-clc;clear all;close all; profile on
+clc;clear vars;close all; profile on
 tic
 %% Input Data
 Vinf  = 10;
-alfad = -2.5;
+alfad = 2.5;
 cord  = 1;
 nitd  = 0;il = 31; it = 71; imax = 101; jair = 26; jmax = 51;
 omega = 1; per = 1*10^-6; nmax = 1000;
@@ -515,7 +515,7 @@ cd = cy * sina + cx * cosa
 % cm_l_
 % trapz(M_Cx,M_X)
 % trapz((Cpl-Cpu)*cosa,(xup-0.25))
-trapz((Cpl-Cpu).*yup,(xup-0.25))
+cm=trapz((Cpl-Cpu).*yup,(xup-0.25))
 % cm_u_-cm_l_
 % cl=trapz(Cpl-Cpu,sqrt(xup^2+yup^2))
 end
